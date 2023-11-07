@@ -6,7 +6,7 @@ _extramodules=extramodules-6.6-MANJARO
 
 pkgname="$_linuxprefix-zfs"
 pkgver=2.2.0
-pkgrel=2
+pkgrel=1.0
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=('x86_64')
 url="http://zfsonlinux.org/"
@@ -24,8 +24,12 @@ build() {
 
 package() {
     _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
-    install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 zfs/${pkgver}/${_kernver}/${CARCH}/module/*
+    install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 zfs/${pkgver}/${_kernver}/${CARCH}/module/*
 
     # compress each module individually
     find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
+
+    # systemd module loading
+    printf '%s\n' spl zfs |
+    install -Dm 644 /dev/stdin "${pkgdir}/usr/lib/modules-load.d/${pkgname}.conf"
 }
