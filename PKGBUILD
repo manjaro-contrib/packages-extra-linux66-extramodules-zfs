@@ -6,7 +6,7 @@ _extramodules=extramodules-6.6-MANJARO
 
 pkgname="$_linuxprefix-zfs"
 pkgver=2.2.1
-pkgrel=8
+pkgrel=9
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=('x86_64')
 url="http://zfsonlinux.org/"
