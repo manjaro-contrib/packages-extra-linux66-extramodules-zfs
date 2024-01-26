@@ -2,7 +2,7 @@
 # Maintainer: Philip Müller <philm[at]manjaro[dot]org>
 
 _linuxprefix=linux66
-_extramodules=extramodules-6.6-MANJARO
+_kernver="$(cat /usr/src/${_linuxprefix}/version)"
 
 pkgname="$_linuxprefix-zfs"
 pkgver=2.2.2
@@ -18,13 +18,11 @@ provides=("zfs=${pkgver}" "ZFS-MODULE=${pkgver}")
 options=('!strip')
 
 build() {
-    _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
     fakeroot dkms build --dkmstree "${srcdir}" -m zfs/${pkgver} -k ${_kernver}
 }
 
 package() {
-    _kernver="$(cat /usr/lib/modules/$_extramodules/version)"
-    install -Dt "${pkgdir}/usr/lib/modules/${_extramodules}" -m644 zfs/${pkgver}/${_kernver}/${CARCH}/module/*
+    install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 zfs/${pkgver}/${_kernver}/${CARCH}/module/*
 
     # compress each module individually
     find "$pkgdir" -name '*.ko' -exec xz -T1 {} +
